@@ -1,6 +1,7 @@
 package com.codeclan.example.WhiskyTracker.controllers;
 
 import com.codeclan.example.WhiskyTracker.models.Distillery;
+import com.codeclan.example.WhiskyTracker.models.Whisky;
 import com.codeclan.example.WhiskyTracker.repositories.DistilleryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,16 +19,20 @@ public class DistilleryController {
     @Autowired
     DistilleryRepository distilleryRepository;
 
+//      * Get distilleries that have whiskies that are 12 years old
+
 
     @GetMapping(value = "/distilleries")
-    public ResponseEntity<List<Distillery>> getDistilleriesFilteredByRegion(
-            @RequestParam(name="region", required = false) String region) {
+    public ResponseEntity<List<Distillery>> getDistilleriesFilteredByRegionOrDistilleryAndAge(
+            @RequestParam(name="region", required = false) String region,
+            @RequestParam(name="whiskyage", required = false) Integer whiskyage
+    ){
         if (region != null) {
             return new ResponseEntity<>(distilleryRepository.findByRegion(region), HttpStatus.OK);
+        } else if (whiskyage != null ){
+            return new ResponseEntity<>(distilleryRepository.findByWhiskiesAge(whiskyage), HttpStatus.OK);
         }
         return new ResponseEntity<>(distilleryRepository.findAll(), HttpStatus.OK);
     }
-
-
 
 }
